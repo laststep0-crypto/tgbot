@@ -3,7 +3,7 @@ import os
 from telebot import types
 
 TOKEN = os.getenv('TOKEN')
-print("TOKEN в Render начинается так:", str(TOKEN)[:15])
+print("TOKEN в Render начинается так:", str(TOKEN)[:20])
 if not TOKEN:
     print("❌ TOKEN не найден!")
     exit()

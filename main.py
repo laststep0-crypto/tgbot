@@ -1,6 +1,8 @@
 import telebot
 import os
 from telebot import types
+from flask import Flask
+import threading
 
 TOKEN = os.getenv('TOKEN')
 print("TOKEN в Render начинается так:", str(TOKEN)[:20])
@@ -9,6 +11,7 @@ if not TOKEN:
     exit()
 
 bot = telebot.TeleBot(TOKEN)
+app = Flask(__name__)
 
 @bot.message_handler(commands=['start'])
 def start(message):
@@ -23,9 +26,24 @@ def callback(call):
         try:
             with open('document.docx', 'rb') as f:
                 bot.send_document(call.message.chat.id, f, caption='📄 Вот твой .docx!')
-        except:
-            bot.send_message(call.message.chat.id, '❌ Файл не найден')
+        except Exception as e:
+            bot.send_message(call.message.chat.id, f'❌ Файл не найден: {e}')
     bot.answer_callback_query(call.id)
 
-print("🤖 Бот запущен!")
-bot.infinity_polling()
+@app.route('/')
+def index():
+    return 'Bot is running', 200
+
+def run_bot():
+    print("🤖 Запускаю polling...")
+    bot.infinity_polling()
+
+if __name__ == '__main__':
+    # запуск бота в отдельном потоке
+    t = threading.Thread(target=run_bot, daemon=True)
+    t.start()
+
+    # Flask-сервер для Render (порт обязателен)
+    port = int(os.environ.get('PORT', 5000))
+    print(f"🌐 Flask слушает порт {port}")
+    app.run(host='0.0.0.0', port=port)

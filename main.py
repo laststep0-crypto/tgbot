@@ -2,12 +2,12 @@ import telebot
 import os
 from telebot import types
 
-TOKEN = os.getenv('8308727194:AAHZZkpE3mfA5v0V2f0BmpYneOI3E1IvGIs')
+TOKEN = os.getenv('TOKEN')
 if not TOKEN:
     print("❌ TOKEN не найден!")
     exit()
 
-bot = telebot.TeleBot(8308727194:AAHZZkpE3mfA5v0V2f0BmpYneOI3E1IvGIs)
+bot = telebot.TeleBot(TOKEN)
 
 @bot.message_handler(commands=['start'])
 def start(message):
